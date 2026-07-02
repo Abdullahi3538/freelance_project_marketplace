@@ -1,0 +1,20 @@
+services:
+  postgres:
+    container_name: pg-freelancer-m # change with your project name
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test_db
+    ports:
+      - "5432:5432"
+  pgadmin:
+    container_name: pga-Admin-freelancer-m # change with you project
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@gmail.com # you can use your email
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
