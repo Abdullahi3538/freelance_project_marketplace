@@ -1,7 +1,8 @@
     package Backend.entity.Auth;
 
-
     import Backend.Enmu.Role;
+    import Backend.entity.Freelancer.FreelancerProfile;
+    import com.fasterxml.jackson.annotation.JsonIgnore;
     import jakarta.persistence.*;
     import jakarta.validation.constraints.Email;
     import jakarta.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private long id;
+        private Long id;
 
         @NotBlank(message = "Full name is required")
         @Column(nullable = false, length = 100)
@@ -47,4 +48,9 @@
         public void prePersist() {
             createdAt = LocalDateTime.now();
         }
+
+        @OneToOne(mappedBy = "user")
+        @JsonIgnore
+        private FreelancerProfile freelancerProfile;
+
     }
