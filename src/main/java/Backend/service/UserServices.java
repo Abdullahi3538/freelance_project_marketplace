@@ -1,6 +1,5 @@
 package Backend.service;
 
-import Backend.Enmu.Role;
 import Backend.dto.UserDTO.LoginRequestDto;
 import Backend.dto.UserDTO.RegisterRequestDto;
 import Backend.entity.Auth.User;

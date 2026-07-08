@@ -1,4 +1,4 @@
-package Backend.controller;
+package Backend.Controller;
 
 import Backend.dto.UserDTO.LoginRequestDto;
 import Backend.dto.UserDTO.RegisterRequestDto;
