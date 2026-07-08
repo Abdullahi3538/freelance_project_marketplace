@@ -1,7 +1,5 @@
 package Backend.service;
 
-
-
 import Backend.dto.Freelancerdto.FreelancerProfileRequestDTO;
 import Backend.dto.Freelancerdto.FreelancerProfileResponseDTO;
 import Backend.entity.Auth.User;

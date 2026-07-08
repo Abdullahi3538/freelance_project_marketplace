@@ -1,4 +1,4 @@
-package Backend.controller;
+package Backend.Controller;
 
 import Backend.dto.FreelancerSkillDTO.FreelancerSkillRequestDTO;
 import Backend.dto.FreelancerSkillDTO.FreelancerSkillResponseDTO;
