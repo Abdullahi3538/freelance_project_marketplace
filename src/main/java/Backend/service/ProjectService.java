@@ -10,7 +10,7 @@ import Backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -35,14 +35,24 @@ public class ProjectService {
         project.setDescription(request.getDescription());
         project.setBudget(request.getBudget());
 
-        project.setDeadline(
-                LocalDate.parse(request.getDeadline())
-        );
+        project.setDeadline(request.getDeadline());
 
         project.setClient(client);
 
         projectRepository.save(project);
 
+        return mapToResponse(project);
+
+    }
+
+    public List<ProjectResponseDto> getAllProjects() {
+        return projectRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    private ProjectResponseDto mapToResponse(Project project) {
         ProjectResponseDto response =
                 new ProjectResponseDto();
 
@@ -50,17 +60,17 @@ public class ProjectService {
         response.setTitle(project.getTitle());
         response.setDescription(project.getDescription());
         response.setBudget(project.getBudget());
-        response.setDeadline(LocalDate.parse(project.getDeadline().toString()));
+        response.setDeadline(project.getDeadline());
+        response.setCreatedAt(project.getCreatedAt());
 
 
         response.setStatus(String.valueOf(project.getStatus()));
 
         response.setClientName(
-                client.getFullName()
+                project.getClient().getFullName()
         );
 
         return response;
-
     }
 
 }

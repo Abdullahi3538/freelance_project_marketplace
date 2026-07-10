@@ -3,8 +3,6 @@ package Backend.entity.Project;
 import Backend.Enmu.ProjectStatus;
 import Backend.entity.Auth.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -21,14 +19,12 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Title is required")
     @Column(nullable = false)
     private String title;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Positive(message = "Budget must be positive")
     private Double budget;
 
     private LocalDate deadline;

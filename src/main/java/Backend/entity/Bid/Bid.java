@@ -4,7 +4,6 @@ import Backend.Enmu.BidStatus;
 import Backend.entity.Auth.User;
 import Backend.entity.Project.Project;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +21,6 @@ public class Bid {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Positive
     @Column(nullable = false)
     private Double bidAmount;
 

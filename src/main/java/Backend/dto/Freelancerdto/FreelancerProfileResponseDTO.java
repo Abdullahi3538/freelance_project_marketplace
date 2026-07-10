@@ -3,6 +3,8 @@ package Backend.dto.Freelancerdto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 
 public class FreelancerProfileResponseDTO {
@@ -13,5 +15,6 @@ public class FreelancerProfileResponseDTO {
     private String portfolioUrl;
     private String fullName;
     private String email;
+    private List<String> skills;
 
 }

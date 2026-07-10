@@ -1,16 +1,21 @@
 package Backend.service;
 
+
+
 import Backend.dto.Freelancerdto.FreelancerProfileRequestDTO;
 import Backend.dto.Freelancerdto.FreelancerProfileResponseDTO;
 import Backend.entity.Auth.User;
 import Backend.entity.Freelancer.FreelancerProfile;
+import Backend.entity.Freelancer.Skill;
 
 import Backend.repository.FreelancerProfileRepository;
+import Backend.repository.SkillRepository;
 import Backend.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +25,8 @@ public class FreelancerProfileService {
     private final FreelancerProfileRepository profileRepository;
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final SkillRepository skillRepository;
 
 
 
@@ -40,9 +47,34 @@ public class FreelancerProfileService {
         profile.setHourlyRate(request.getHourlyRate());
         profile.setPortfolioUrl(request.getPortfolioUrl());
         profile.setUser(user);
+        profile.setSkills(getSkills(request.getSkillIds()));
 
         profileRepository.save(profile);
 
+        return mapToResponse(profile);
+    }
+
+    public List<FreelancerProfileResponseDTO> getAllProfiles() {
+        return profileRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    private List<Skill> getSkills(List<Long> skillIds) {
+        if (skillIds == null || skillIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<Skill> skills = skillRepository.findAllById(skillIds);
+        if (skills.size() != skillIds.size()) {
+            throw new RuntimeException("One or more skills were not found");
+        }
+        return skills;
+    }
+
+    private FreelancerProfileResponseDTO mapToResponse(FreelancerProfile profile) {
+        User user = profile.getUser();
         FreelancerProfileResponseDTO response = new FreelancerProfileResponseDTO();
 
         response.setId(profile.getId());
@@ -53,6 +85,12 @@ public class FreelancerProfileService {
 
         response.setFullName(user.getFullName());
         response.setEmail(user.getEmail());
+        response.setSkills(
+                profile.getSkills()
+                        .stream()
+                        .map(Skill::getName)
+                        .toList()
+        );
 
         return response;
     }

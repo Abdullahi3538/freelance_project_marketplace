@@ -2,10 +2,13 @@ package Backend.service;
 
 import Backend.dto.UserDTO.LoginRequestDto;
 import Backend.dto.UserDTO.RegisterRequestDto;
+import Backend.dto.UserDTO.UserResponseDto;
 import Backend.entity.Auth.User;
 import Backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServices {
@@ -36,5 +39,22 @@ public class UserServices {
         }
         return "Login successful";
 
+    }
+
+    public List<UserResponseDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    private UserResponseDto mapToResponse(User user) {
+        UserResponseDto response = new UserResponseDto();
+        response.setId(user.getId());
+        response.setFullName(user.getFullName());
+        response.setEmail(user.getEmail());
+        response.setRole(user.getRole());
+        response.setCreatedAt(user.getCreatedAt());
+        return response;
     }
 }

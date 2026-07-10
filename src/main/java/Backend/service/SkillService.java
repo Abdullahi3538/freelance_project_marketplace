@@ -6,6 +6,8 @@ import Backend.entity.Freelancer.Skill;
 import Backend.repository.SkillRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SkillService {
 
@@ -26,6 +28,17 @@ public class SkillService {
 
         skillRepository.save(skill);
 
+        return mapToResponse(skill);
+    }
+
+    public List<SkillResponseDTO> getAllSkills() {
+        return skillRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    private SkillResponseDTO mapToResponse(Skill skill) {
         SkillResponseDTO response = new SkillResponseDTO();
         response.setId(skill.getId());
         response.setName(skill.getName());

@@ -1,7 +1,6 @@
 package Backend.entity.Freelancer;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -15,7 +14,6 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Skill name is required")
     @Column(nullable = false, unique = true)
     private String name;
 }

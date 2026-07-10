@@ -11,6 +11,8 @@ import Backend.repository.BidRepository;
 import Backend.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BidService {
 
@@ -54,6 +56,17 @@ public class BidService {
 
         bidRepository.save(bid);
 
+        return mapToResponse(bid);
+    }
+
+    public List<BidResponseDTO> getAllBids() {
+        return bidRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    private BidResponseDTO mapToResponse(Bid bid) {
         BidResponseDTO response =
                 new BidResponseDTO();
 
@@ -65,11 +78,11 @@ public class BidService {
         response.setStatus(bid.getStatus());
 
         response.setProjectTitle(
-                project.getTitle()
+                bid.getProject().getTitle()
         );
 
         response.setFreelancerName(
-                freelancer.getFullName()
+                bid.getFreelancer().getFullName()
         );
 
         return response;

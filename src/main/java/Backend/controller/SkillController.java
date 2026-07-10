@@ -3,10 +3,10 @@ package Backend.controller;
 import Backend.dto.SkillDTO.SkillRequestDTO;
 import Backend.dto.SkillDTO.SkillResponseDTO;
 import Backend.service.SkillService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/skills")
@@ -20,7 +20,12 @@ public class SkillController {
     }
 
     @PostMapping
-    public SkillResponseDTO createSkill(@RequestBody SkillRequestDTO request) {
+    public SkillResponseDTO createSkill(@Valid @RequestBody SkillRequestDTO request) {
         return skillService.createSkill(request);
+    }
+
+    @GetMapping
+    public List<SkillResponseDTO> getAllSkills() {
+        return skillService.getAllSkills();
     }
 }
