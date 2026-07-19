@@ -1,59 +1,52 @@
 package Backend.service;
 
-
-
 import Backend.dto.Freelancerdto.FreelancerProfileRequestDTO;
 import Backend.dto.Freelancerdto.FreelancerProfileResponseDTO;
 import Backend.entity.Auth.User;
 import Backend.entity.Freelancer.FreelancerProfile;
-import Backend.entity.Freelancer.Skill;
-
+import Backend.exception.ResourceAlreadyExistsException;
+import Backend.exception.ResourceNotFoundException;
 import Backend.repository.FreelancerProfileRepository;
-import Backend.repository.SkillRepository;
 import Backend.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FreelancerProfileService {
 
-    @Autowired
     private final FreelancerProfileRepository profileRepository;
-    @Autowired
     private final UserRepository userRepository;
-    @Autowired
-    private final SkillRepository skillRepository;
 
-
-
+    // Create profile — automatically linked to the currently logged-in FREELANCER
     public FreelancerProfileResponseDTO createProfile(FreelancerProfileRequestDTO request) {
+        // Extract the logged-in user's email from the SecurityContext (set by JwtFilter)
+        User currentUser = getCurrentUser();
 
-        if (profileRepository.existsByUserId(request.getUserId())) {
-            throw new RuntimeException("This user already has a freelancer profile");
+        if (profileRepository.existsByUserId(currentUser.getId())) {
+            throw new ResourceAlreadyExistsException("You already have a freelancer profile");
         }
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() ->
-                        new RuntimeException("User not found"));
-
         FreelancerProfile profile = new FreelancerProfile();
-
         profile.setBio(request.getBio());
         profile.setExperienceYears(request.getExperienceYears());
         profile.setHourlyRate(request.getHourlyRate());
         profile.setPortfolioUrl(request.getPortfolioUrl());
-        profile.setUser(user);
-        profile.setSkills(getSkills(request.getSkillIds()));
+        profile.setUser(currentUser);
+        
+        // Clean up the skills (e.g. "React " -> "react")
+        profile.setSkills(cleanSkills(request.getSkills()));
 
         profileRepository.save(profile);
 
         return mapToResponse(profile);
     }
 
+    // Get all profiles — any authenticated user
     public List<FreelancerProfileResponseDTO> getAllProfiles() {
         return profileRepository.findAll()
                 .stream()
@@ -61,16 +54,64 @@ public class FreelancerProfileService {
                 .toList();
     }
 
-    private List<Skill> getSkills(List<Long> skillIds) {
-        if (skillIds == null || skillIds.isEmpty()) {
-            return List.of();
+    // Get the current logged-in freelancer's own profile
+    public FreelancerProfileResponseDTO getMyProfile() {
+        User currentUser = getCurrentUser();
+        FreelancerProfile profile = profileRepository.findByUserId(currentUser.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("You do not have a profile yet"));
+        return mapToResponse(profile);
+    }
+
+    // Get profile by ID
+    public FreelancerProfileResponseDTO getProfileById(Long id) {
+        FreelancerProfile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Freelancer profile not found with id: " + id));
+        return mapToResponse(profile);
+    }
+
+    // Update own profile — only the logged-in FREELANCER can update their own profile
+    public FreelancerProfileResponseDTO updateProfile(Long id, FreelancerProfileRequestDTO request) {
+        FreelancerProfile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Freelancer profile not found with id: " + id));
+
+        User currentUser = getCurrentUser();
+
+        // Make sure the profile belongs to the logged-in user
+        if (!profile.getUser().getId().equals(currentUser.getId())) {
+            throw new RuntimeException("You are not authorized to update this profile");
         }
 
-        List<Skill> skills = skillRepository.findAllById(skillIds);
-        if (skills.size() != skillIds.size()) {
-            throw new RuntimeException("One or more skills were not found");
+        profile.setBio(request.getBio());
+        profile.setExperienceYears(request.getExperienceYears());
+        profile.setHourlyRate(request.getHourlyRate());
+        profile.setPortfolioUrl(request.getPortfolioUrl());
+        profile.setSkills(cleanSkills(request.getSkills()));
+
+        profileRepository.save(profile);
+
+        return mapToResponse(profile);
+    }
+
+    // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    // Get the currently authenticated User from the SecurityContext
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // getName() returns the email (set in JwtFilter)
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
+    }
+
+    // Clean and normalize skills (trim whitespace and lowercase)
+    private List<String> cleanSkills(List<String> skills) {
+        if (skills == null || skills.isEmpty()) {
+            return List.of();
         }
-        return skills;
+        return skills.stream()
+                .filter(s -> s != null && !s.trim().isEmpty())
+                .map(s -> s.trim().toLowerCase())
+                .distinct() // Remove duplicates like ["java", "Java"]
+                .toList();
     }
 
     private FreelancerProfileResponseDTO mapToResponse(FreelancerProfile profile) {
@@ -82,17 +123,12 @@ public class FreelancerProfileService {
         response.setExperienceYears(profile.getExperienceYears());
         response.setHourlyRate(profile.getHourlyRate());
         response.setPortfolioUrl(profile.getPortfolioUrl());
-
         response.setFullName(user.getFullName());
         response.setEmail(user.getEmail());
-        response.setSkills(
-                profile.getSkills()
-                        .stream()
-                        .map(Skill::getName)
-                        .toList()
-        );
+        
+        // Return skills directly as they are already Strings
+        response.setSkills(profile.getSkills());
 
         return response;
     }
-
 }

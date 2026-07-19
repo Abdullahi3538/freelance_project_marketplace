@@ -1,6 +1,5 @@
 package Backend.dto.Freelancerdto;
 
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
@@ -19,9 +18,6 @@ public class FreelancerProfileRequestDTO {
 
     private String portfolioUrl;
 
-    @NotNull(message = "User id is required")
-    private Long userId;
-
-    private List<Long> skillIds;
-
+    // Use "skills" instead of "skillIds", accepting a list of strings
+    private List<String> skills;
 }

@@ -23,7 +23,7 @@ public class projectRequestDTO {
     @FutureOrPresent(message = "Deadline cannot be in the past")
     private LocalDate deadline;
 
-    @NotNull(message = "Client id is required")
-    private Long clientId;
+    // clientId is no longer needed in the request body
+    // It will be extracted automatically from the JWT token
 
 }

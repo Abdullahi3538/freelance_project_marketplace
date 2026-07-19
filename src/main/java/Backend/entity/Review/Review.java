@@ -1,8 +1,8 @@
-package Backend.entity.Contract;
+package Backend.entity.Review;
 
 import Backend.entity.Auth.User;
+import Backend.entity.Contract.Contract;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -30,11 +30,10 @@ public class Review {
     @JoinColumn(name = "reviewee_id", nullable = false)
     private User reviewee;
 
-    @Min(1)
-    @Max(5)
+    @Column(nullable = false)
     private Integer rating;
 
-    @Size(max = 1000)
+    @Column(length = 1000)
     private String comment;
 
     @Column(nullable = false, updatable = false)

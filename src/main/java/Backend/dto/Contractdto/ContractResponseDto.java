@@ -11,10 +11,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContractResponseDto {
-
     private Long id;
     private String clientName;
     private String freelancerName;
+    private String projectTitle;
     private LocalDate startDate;
     private LocalDate endDate;
     private Double totalAmount;

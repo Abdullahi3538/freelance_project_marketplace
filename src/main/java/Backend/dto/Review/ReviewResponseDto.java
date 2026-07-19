@@ -1,4 +1,4 @@
-package Backend.dto.Contractdto;
+package Backend.dto.Review;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class ReviewResponseDto {
 
     private Long id;
+    private Long contractId;
     private String reviewerName;
     private String revieweeName;
     private Integer rating;

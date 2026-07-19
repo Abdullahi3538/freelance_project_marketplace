@@ -1,4 +1,4 @@
-package Backend.dto.Contractdto;
+package Backend.dto.Milestone;
 
 import Backend.Enmu.MilestoneStatus;
 import lombok.AllArgsConstructor;
@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class MilestoneResponseDto {
 
     private Long id;
+    private Long contractId;
     private String title;
     private String description;
     private LocalDate dueDate;

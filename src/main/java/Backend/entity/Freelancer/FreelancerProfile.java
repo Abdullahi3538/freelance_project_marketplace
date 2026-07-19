@@ -35,11 +35,8 @@ public class FreelancerProfile {
     @JsonIgnore
     private User user;
 
-    @ManyToMany
-    @JoinTable(
-            name = "freelancer_profile_skills",
-            joinColumns = @JoinColumn(name = "profile_id"),
-            inverseJoinColumns = @JoinColumn(name = "skill_id")
-    )
-    private List<Skill> skills = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "freelancer_profile_custom_skills", joinColumns = @JoinColumn(name = "profile_id"))
+    @Column(name = "skill")
+    private List<String> skills = new ArrayList<>();
 }

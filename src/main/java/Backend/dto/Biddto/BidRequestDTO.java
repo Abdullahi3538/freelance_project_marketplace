@@ -22,6 +22,5 @@ public class BidRequestDTO {
     @NotNull(message = "Project id is required")
     private Long projectId;
 
-    @NotNull(message = "Freelancer id is required")
-    private Long freelancerId;
+    // freelancerId is extracted automatically from JWT
 }

@@ -3,9 +3,9 @@ package Backend.entity.Contract;
 import Backend.Enmu.ContractStatus;
 import Backend.entity.Auth.User;
 import Backend.entity.Bid.Bid;
+import Backend.entity.Milestone.Milestone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -33,13 +33,11 @@ public class Contract {
     @JoinColumn(name = "freelancer_id", nullable = false)
     private User freelancer;
 
-    @NotNull
     private LocalDate startDate;
 
     private LocalDate endDate;
 
-    @NotNull
-    @Positive(message = "Total amount must be positive")
+    @Column(nullable = false)
     private Double totalAmount;
 
     @Enumerated(EnumType.STRING)
