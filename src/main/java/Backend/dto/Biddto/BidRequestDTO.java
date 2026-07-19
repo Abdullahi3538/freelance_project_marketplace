@@ -3,6 +3,7 @@ package Backend.dto.Biddto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -17,6 +18,7 @@ public class BidRequestDTO {
     private Integer deliveryDays;
 
     @NotBlank(message = "Proposal is required")
+    @Size(min = 20, message = "Proposal must be at least 20 characters")
     private String proposal;
 
     @NotNull(message = "Project id is required")

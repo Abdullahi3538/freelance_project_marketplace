@@ -2,14 +2,17 @@ package Backend.service;
 
 import Backend.Enmu.BidStatus;
 import Backend.Enmu.ContractStatus;
+import Backend.Enmu.ProjectStatus;
 import Backend.dto.Contractdto.ContractRequestDto;
 import Backend.dto.Contractdto.ContractResponseDto;
 import Backend.entity.Auth.User;
 import Backend.entity.Bid.Bid;
 import Backend.entity.Contract.Contract;
+import Backend.entity.Project.Project;
 import Backend.exception.ResourceNotFoundException;
 import Backend.repository.BidRepository;
 import Backend.repository.ContractRepository;
+import Backend.repository.ProjectRepository;
 import Backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -25,6 +28,7 @@ public class ContractService {
     private final ContractRepository contractRepository;
     private final BidRepository bidRepository;
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
     public ContractResponseDto createContract(ContractRequestDto request) {
         Bid bid = bidRepository.findById(request.getBidId())
@@ -75,6 +79,11 @@ public class ContractService {
             throw new RuntimeException("Only the client can complete this contract");
         }
         contract.setStatus(ContractStatus.COMPLETED);
+        
+        Project project = contract.getBid().getProject();
+        project.setStatus(ProjectStatus.COMPLETED);
+        projectRepository.save(project);
+        
         contractRepository.save(contract);
         return mapToResponse(contract);
     }

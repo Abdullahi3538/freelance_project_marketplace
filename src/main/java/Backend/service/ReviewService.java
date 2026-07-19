@@ -86,6 +86,7 @@ public class ReviewService {
         ReviewResponseDto response = new ReviewResponseDto();
         response.setId(review.getId());
         response.setContractId(review.getContract().getId());
+        response.setProjectTitle(review.getContract().getBid().getProject().getTitle());
         response.setReviewerName(review.getReviewer().getFullName());
         response.setRevieweeName(review.getReviewee().getFullName());
         response.setRating(review.getRating());

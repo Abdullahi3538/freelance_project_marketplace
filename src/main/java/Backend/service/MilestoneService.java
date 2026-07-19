@@ -26,20 +26,33 @@ public class MilestoneService {
     private final ContractRepository contractRepository;
     private final UserRepository userRepository;
 
-    // CLIENT creates a milestone inside their active contract
+    // FREELANCER creates a milestone inside their active contract
     public MilestoneResponseDto createMilestone(MilestoneRequestDto request) {
         Contract contract = contractRepository.findById(request.getContractId())
                 .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
 
-        // Security: only the client who owns this contract can create milestones
+        // Security: only the freelancer who works on this contract can create milestones
         User currentUser = getCurrentUser();
-        if (!contract.getClient().getId().equals(currentUser.getId())) {
-            throw new RuntimeException("You are not the client of this contract");
+        if (!contract.getFreelancer().getId().equals(currentUser.getId())) {
+            throw new RuntimeException("You are not the freelancer of this contract");
         }
 
         // State: can only add milestones to an ACTIVE contract
         if (contract.getStatus() != ContractStatus.ACTIVE) {
             throw new RuntimeException("Cannot add milestones to a contract that is not ACTIVE");
+        }
+
+        // Budget check: total of all milestones must not exceed the contract's total amount
+        List<Milestone> existingMilestones = milestoneRepository.findByContractId(contract.getId());
+        double alreadyAllocated = existingMilestones.stream()
+                .mapToDouble(Milestone::getAmount)
+                .sum();
+        double newTotal = alreadyAllocated + request.getAmount();
+        if (newTotal > contract.getTotalAmount()) {
+            double remaining = contract.getTotalAmount() - alreadyAllocated;
+            throw new RuntimeException(
+                String.format("Milestone amount exceeds contract budget. Remaining budget: $%.2f", remaining)
+            );
         }
 
         Milestone milestone = new Milestone();

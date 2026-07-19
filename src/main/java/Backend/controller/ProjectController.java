@@ -1,5 +1,7 @@
 package Backend.controller;
 
+import Backend.dto.Biddto.BidRequestDTO;
+import Backend.dto.Biddto.BidResponseDTO;
 import Backend.dto.projectdto.ProjectResponseDto;
 import Backend.dto.projectdto.projectRequestDTO;
 import Backend.service.ProjectService;

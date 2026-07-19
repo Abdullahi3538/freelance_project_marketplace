@@ -13,6 +13,7 @@ public class ReviewResponseDto {
 
     private Long id;
     private Long contractId;
+    private String projectTitle;
     private String reviewerName;
     private String revieweeName;
     private Integer rating;

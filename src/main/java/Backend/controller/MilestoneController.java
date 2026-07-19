@@ -19,9 +19,9 @@ public class MilestoneController {
 
     private final MilestoneService milestoneService;
 
-    // Only CLIENTS can create milestones inside a contract
+    // Only FREELANCERS can create milestones inside a contract
     @PostMapping
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasRole('FREELANCER')")
     public ResponseEntity<MilestoneResponseDto> createMilestone(
             @Valid @RequestBody MilestoneRequestDto request) {
         return new ResponseEntity<>(milestoneService.createMilestone(request), HttpStatus.CREATED);
