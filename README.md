@@ -15,7 +15,6 @@ The Freelance Project Marketplace is designed to simplify the hiring process bet
 * Set project budgets and deadlines
 * View and compare freelancer bids
 * Award contracts to freelancers
-* Track project milestones
 * Release milestone payments
 * Rate and review freelancers
 
@@ -23,12 +22,11 @@ The Freelance Project Marketplace is designed to simplify the hiring process bet
 
 * User registration and authentication
 * Create a professional profile
-* Add and manage skill tags
 * Browse available projects
 * Submit bids and proposals
-* Track contract progress and milestones
+* Track project milestones
 * Receive payments for completed milestones
-* Rate and review clients
+* Receive review clients
 
 ### Admin Features
 
@@ -45,12 +43,13 @@ The Freelance Project Marketplace is designed to simplify the hiring process bet
 * Spring Security (JWT Authentication)
 * Spring Data JPA
 * PostgreSQL
-* Maven
+
 
 ### Frontend
 
 * React.js 18
 * React Router DOM
+* React Rooter
 * Axios
 * Tailwind CSS
 
@@ -60,13 +59,11 @@ The system consists of the following tables:
 
 1. Users
 2. Freelancer Profiles
-3. Skills
-4. Freelancer Skills
-5. Projects
-6. Bids
-7. Contracts
-8. Milestones
-9. Reviews
+3. Projects
+4. Bids
+5. Contracts
+6. Milestones
+7. Reviews
 
 ## 📂 Project Structure
 
@@ -86,9 +83,7 @@ freelance-marketplace/
     ├── components/
     ├── pages/
     ├── services/
-    ├── context/
-    ├── hooks/
-    └── utils/
+    └── context/
 ```
 
 ## 🚀 Development Status
@@ -111,9 +106,7 @@ freelance-marketplace/
 
 ## 📅 Development Timeline
 
-Duration: 17
-
-Final Submission Deadline: July 17
+Final Submission Deadline: July 25
 
 ## 📄 License
 
