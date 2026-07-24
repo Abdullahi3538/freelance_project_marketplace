@@ -7,6 +7,9 @@ import Backend.entity.Milestone.Milestone;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Contract {
+public class Contract{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,18 +26,20 @@ public class Contract {
 
     @OneToOne
     @JoinColumn(name = "bid_id", nullable = false, unique = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Bid bid;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User client;
 
     @ManyToOne
     @JoinColumn(name = "freelancer_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User freelancer;
 
     private LocalDate startDate;
-
     private LocalDate endDate;
 
     @Column(nullable = false)

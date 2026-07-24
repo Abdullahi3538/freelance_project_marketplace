@@ -4,6 +4,8 @@ import Backend.Enmu.ProjectStatus;
 import Backend.entity.Auth.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -36,17 +38,14 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User client;
 
     @PrePersist
     public void prePersist() {
-
         createdAt = LocalDateTime.now();
-
         if (status == null) {
             status = ProjectStatus.OPEN;
         }
-
     }
-
 }

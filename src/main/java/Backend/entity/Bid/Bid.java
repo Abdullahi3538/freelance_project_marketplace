@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
@@ -38,21 +40,19 @@ public class Bid {
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Project project;
 
     @ManyToOne
     @JoinColumn(name = "freelancer_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User freelancer;
 
     @PrePersist
     public void prePersist() {
-
         createdAt = LocalDateTime.now();
-
         if (status == null) {
             status = BidStatus.PENDING;
         }
-
     }
-
 }
